@@ -34,7 +34,9 @@ def giant_mask(adj: csr_matrix, alive: np.ndarray) -> np.ndarray:
 def simulate(adj_A, adj_B, dep, p: float, seed: int = 0, max_iter: int = 10_000) -> dict:
     """Run one cascade. Returns failure times and the per-iteration curve.
 
-    fail_t_A[i] = iteration at which A-node i failed (0 = initial attack), -1 = survived.
+    fail_t_A[i] = HALF-STEP at which A-node i failed, -1 = survived.
+      0 = initial attack, 2t-1 = during A-pruning of round t, 2t = during B-pruning of round t.
+      Round of failure = ceil(fail_t / 2).  Half-steps double time resolution (R1).
     """
     n = adj_A.shape[0]
     inv = inverse(dep)
@@ -55,13 +57,15 @@ def simulate(adj_A, adj_B, dep, p: float, seed: int = 0, max_iter: int = 10_000)
         alive_A &= giant_mask(adj_A, alive_A)
         dead_A = ~alive_A & (dep >= 0)
         alive_B[dep[dead_A]] = False
+        fail_A[(~alive_A) & (fail_A < 0)] = 2 * t - 1      # half-step resolution
+        fail_B[(~alive_B) & (fail_B < 0)] = 2 * t - 1
         # (b) B pruning, then dependency B -> A
         alive_B &= giant_mask(adj_B, alive_B)
         dead_B = ~alive_B & (inv >= 0)
         alive_A[inv[dead_B]] = False
 
-        fail_A[(~alive_A) & (fail_A < 0)] = t
-        fail_B[(~alive_B) & (fail_B < 0)] = t
+        fail_A[(~alive_A) & (fail_A < 0)] = 2 * t
+        fail_B[(~alive_B) & (fail_B < 0)] = 2 * t
         if alive_A.sum() + alive_B.sum() == before:   # no change -> stable
             break
         curve.append((t, alive_A.mean(), alive_B.mean()))
@@ -69,6 +73,7 @@ def simulate(adj_A, adj_B, dep, p: float, seed: int = 0, max_iter: int = 10_000)
     return {
         "fail_t_A": fail_A, "fail_t_B": fail_B,
         "curve": np.array(curve),              # columns: iteration, frac_alive_A, frac_alive_B
-        "n_iter": int(curve[-1][0]),
+        "n_iter": int(curve[-1][0]),          # rounds
+        "n_half": int(max(fail_A.max(), fail_B.max())),  # last half-step with a failure
         "S_final": float(alive_A.mean()),       # mutual giant component size (A side)
     }
