@@ -1,0 +1,10 @@
+networkx>=3.2
+numpy
+pandas
+pyarrow
+scikit-learn
+xgboost
+matplotlib
+pydantic>=2
+pyyaml
+pytest
