@@ -17,8 +17,8 @@ foundational papers the code directly implements.
 | 4 | Scheffer, Bascompte, Brock et al., *Early-warning signals for critical transitions*, Nature 461, 53 (2009) | `feature_extraction.py` → why variance / lag-1 AC rise near a tipping point | step 4 |
 | 4 | Dakos et al., *Methods for detecting early warnings of critical transitions in time series…*, PLoS ONE 7, e41010 (2012) | `feature_extraction.py` → computing EWS, short-window reliability flag | step 4 (skim) |
 | 5 | ★ Machado, Sridhar, Gil, Henriques, Moura & Santos, *Recovering the graph underlying networked dynamical systems under partial observability: a deep learning approach*, AAAI 2023 — [arXiv:2208.04405](https://arxiv.org/abs/2208.04405) | `mechanism_classifier.py` (closest competitor — we classify the family, not edges) | step 5 |
-| 6 | ★ Salehpour & Al-Anbagi, *RESP: A real-time early-stage failure prediction mechanism for smart grid systems*, IEEE Systems Journal (2024) | `collapse_predictor.py` (features from partial failures + XGBoost baseline) | **read now** |
-| 6 | ★ Liu et al., *Early predictor for the onset of critical transitions in networked dynamical systems*, Phys. Rev. X 14, 031009 (2024) | evaluation framing in `evaluation.py` | **read now** |
-| 6 | ★ (optional) Ma et al., *Learning from the past: predicting critical transitions with machine learning trained on surrogates of historical data* — [arXiv:2410.09707](https://arxiv.org/abs/2410.09707) (Comm. Phys. 2025) | baseline-comparison design | **read now** |
+| 6 | ★ Salehpour & Al-Anbagi, *RESP: A real-time early-stage failure prediction mechanism for smart grid systems*, IEEE Systems Journal (2024) | `collapse_predictor.py` (features from partial failures + XGBoost baseline) | step 6 — **full text still to read** |
+| 6 | ★ Liu et al., *Early predictor for the onset of critical transitions in networked dynamical systems*, Phys. Rev. X 14, 031009 (2024) | evaluation framing in `evaluation.py` | step 6 |
+| 6 | ★ (optional) Ma et al., *Learning from the past: predicting critical transitions with machine learning trained on surrogates of historical data* — [arXiv:2410.09707](https://arxiv.org/abs/2410.09707) (Comm. Phys. 2025) | baseline-comparison design, bootstrap reporting (step 7) | step 6 |
 
 Per-step notes: `notes/stepN_*.md`.  Five-line summaries: `comparison_matrix.md`.
