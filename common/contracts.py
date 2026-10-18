@@ -12,7 +12,8 @@ class ExperimentConfig(BaseModel):
     avg_degree: float = 4.0
     coupling: str = "one_to_one"
     dependency_fraction: float = 1.0
-    attack_grid: list[float] = [round(0.02 * i, 2) for i in range(31)]  # 0.00..0.60
+    attack_grid: list[float] = [round(0.16 + 0.02 * i, 2) for i in range(18)]  # 0.16..0.50, common to all families (D5)
+    horizons: list[int] = [2, 4, 6, 8]     # observation horizons in half-steps (D2, D3)
     n_seeds: int = 3                       # attack seeds per (graph, p)
     seed: int = 42
     collapse_threshold: float = 0.25
@@ -56,3 +57,27 @@ class MetricsRow(BaseModel):
     pr_auc: float | None = None
     balanced_acc: float | None = None
     seed: int
+
+
+# ---- trajectories.parquet schema (frozen) -------------------------------------------------
+# one row per (graph_id, seed, p, h), h = half-step 0..end of cascade
+#   alive_A, alive_B   : fraction of layer A / B still functional after half-step h
+#   new_fail_A/B       : fraction of layer A / B that failed AT half-step h
+# Only aggregate counts are stored: no node ids, no adjacency, no dependency map (leakage rule 1).
+TRAJ_KEYS = ["graph_id", "seed", "p", "h"]
+TRAJ_COLS = TRAJ_KEYS + ["alive_A", "alive_B", "new_fail_A", "new_fail_B"]
+OUTCOME_COLS = ["graph_id", "family", "seed", "p", "S_final", "collapsed", "n_half"]
+
+
+def validate_trajectories(df) -> None:
+    missing = set(TRAJ_COLS) - set(df.columns)
+    assert not missing, f"trajectories missing {missing}"
+    assert ((df[["alive_A", "alive_B"]] >= -1e-12) & (df[["alive_A", "alive_B"]] <= 1 + 1e-12)).all().all()
+    g = df.sort_values(TRAJ_KEYS).groupby(["graph_id", "seed", "p"])
+    assert (g.alive_A.diff().fillna(0) <= 1e-12).all(), "alive_A must be non-increasing (no recovery)"
+
+
+def validate_outcomes(df) -> None:
+    missing = set(OUTCOME_COLS) - set(df.columns)
+    assert not missing, f"outcomes missing {missing}"
+    assert set(df.family) <= set(FAMILIES)

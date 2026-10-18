@@ -15,5 +15,6 @@ def artifact_dir(run_id: str) -> Path:
     return d
 
 
-def features_file(frac: float) -> str:
-    return f"features_{int(round(frac * 100))}.parquet"
+def features_file(h: int) -> str:
+    """Features at a fixed horizon of h half-steps (D3)."""
+    return f"features_h{h}.parquet"

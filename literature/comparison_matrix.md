@@ -30,11 +30,11 @@ Rows marked *(fill on reading)* are drafted from abstracts; confirm/correct afte
 - **Target:** failure outcome for one fixed grid
 - **We differ:** we predict collapse across synthetic families and test transfer to a family never seen in training.
 
-### Deb et al., R. Soc. Open Sci. 2022 (EWSNet) *(fill on reading)*
-- **Observed:** a single time series approaching a transition
-- **Hidden:** the generating model
-- **Task:** deep net trained on simple simulated models
-- **Target:** whether / what kind of critical transition is coming
+### Deb et al., R. Soc. Open Sci. 9, 211475 (2022) (EWSNet) *(abstract checked; confirm details on reading)*
+- **Observed:** a single time series approaching a transition (no knowledge of system structure)
+- **Hidden:** the generating model / system structure
+- **Task:** deep net (EWSNet) trained on simple simulated models, tested on real climate and ecological collapses
+- **Target:** whether a critical transition is coming, and whether it is catastrophic or non-catastrophic
 - **We differ:** we use their classical signals (variance, lag-1 autocorrelation) as *baseline features* on network cascades.
 
 ### Liu et al., PRX 2024 *(fill on reading)*

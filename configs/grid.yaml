@@ -1,0 +1,7 @@
+# Experiment grid. run_experiments.py loops over these.
+- run_id: main_N2000
+  n_nodes: 2000
+  n_graphs_per_family: 50
+  n_seeds: 3
+  seed: 42
+  collapse_threshold: 0.25

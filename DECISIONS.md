@@ -8,3 +8,5 @@
 | D4 | 2026-10-18 | **R1 = GO** with the Buldyrev cascade, working in the near-critical window. | Near p_c, collapsing cascades stay above the threshold for a median 6–8 half-steps at N=1000, growing with N (results/R1_summary.csv). |
 | D5 | 2026-10-18 | Dataset attack grid is **one common grid for all families** (0.16–0.50), never centred per family. | Family-specific grids would let the classifier read the family off p (WS p_c=0.23 vs ~0.39 for the rest). |
 | D6 | 2026-10-18 | Scale to N=2000 for the final dataset once the pipeline works end to end. | Longer plateau → more observable early window (R1 table). |
+| D7 | 2026-10-18 | Trajectory schema frozen: one row per (graph_id, seed, p, h) with alive_A/B and new_fail_A/B fractions only. | Aggregates only → no node ids, wiring or dependency map can leak (rule 1). |
+| D8 | 2026-10-18 | Collapse scores reported on ALL cases and on the UNDECIDED subset (S(h) ≥ threshold at horizon h). | By h=4, 33% of cascades are already visibly collapsed; predicting those is trivial. |
