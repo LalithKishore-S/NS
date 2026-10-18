@@ -37,16 +37,16 @@ Rows marked *(fill on reading)* are drafted from abstracts; confirm/correct afte
 - **Target:** whether a critical transition is coming, and whether it is catastrophic or non-catastrophic
 - **We differ:** we use their classical signals (variance, lag-1 autocorrelation) as *baseline features* on network cascades.
 
-### Liu et al., PRX 2024 *(fill on reading)*
-- **Observed:** node dynamics on a network
-- **Hidden:** when the transition starts
-- **Task:** predict the onset of a critical transition in networked systems
-- **Target:** the transition point
-- **We differ:** binary collapse/no-collapse from partial cascades, with leave-one-family-out testing.
+### Liu et al., Phys. Rev. X 14, 031009 (2024) *(summary checked; confirm on reading)*
+- **Observed:** short time series (≈20 points) at every node, plus the network the GNN runs on
+- **Hidden:** when the regime shift will happen
+- **Task:** GIN + GRU neural network trained on simulated / real networked dynamics
+- **Target:** the onset time of a critical transition
+- **We differ:** we see only aggregate failure counts and no graph, predict collapse vs. recovery with classical ML, and explicitly test transfer to an unseen topology family (they leave cross-network transfer to future work).
 
-### Ma et al., Comm. Phys. 2025 (optional) *(fill on reading)*
-- **Observed:** historical time series of the system
-- **Hidden:** future transition
-- **Task:** train ML on surrogates of the system's own history instead of generic models
-- **Target:** upcoming critical transition
-- **We differ:** our training set is simulated cascades on several topology families; the held-out family plays the role of an "unseen system".
+### Ma, Zeng, Zhang & Bury, Comm. Phys. 2025 / arXiv:2410.09707 (optional) *(abstract checked)*
+- **Observed:** historical time series of the system's own past transitions
+- **Hidden:** whether the current series is approaching a transition
+- **Task:** train SVM / LSTM / CNN classifiers on surrogates (permutation, Fourier, AAFT, IAAFT) of that history
+- **Target:** probability of being "pre-transition"; compared to variance and lag-1 AC by ROC-AUC
+- **We differ:** our training data are simulated cascades on several topology families; the held-out family plays the role of a "new system", and we keep a simple baseline (state-only) in every comparison, as they do.
