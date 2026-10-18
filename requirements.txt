@@ -8,3 +8,4 @@ matplotlib
 pydantic>=2
 pyyaml
 pytest
+scipy
