@@ -13,6 +13,7 @@ class ExperimentConfig(BaseModel):
     coupling: str = "one_to_one"
     dependency_fraction: float = 1.0
     attack_grid: list[float] = [round(0.16 + 0.02 * i, 2) for i in range(18)]  # 0.16..0.50, common to all families (D5)
+    attack: str = "random"          # random | degree | betweenness | kcore
     horizons: list[int] = [2, 4, 6, 8]     # observation horizons in half-steps (D2, D3)
     n_seeds: int = 3                       # attack seeds per (graph, p)
     seed: int = 42

@@ -15,6 +15,7 @@ from person_a_sim.network_generation import make_graph, avg_degree
 from person_a_sim.interdependency import couple
 from person_a_sim.cascade_simulator import simulate, to_csr
 from person_a_sim.threshold_analysis import estimate_pc
+from person_a_sim.attacks import attack_order
 
 
 def _traj_rows(gid, seed, p, out, n):
@@ -35,6 +36,7 @@ def build_networks_and_cascades(cfg: ExperimentConfig) -> list[ThresholdReport]:
         for g in range(cfg.n_graphs_per_family):
             s = cfg.seed + 100_000 * fi + 1000 * g
             GA, GB = make_graph(fam, cfg.n_nodes, cfg.avg_degree, s), make_graph(fam, cfg.n_nodes, cfg.avg_degree, s + 1)
+            order_A = attack_order(GA, cfg.attack, seed=s + 5)
             A, B = to_csr(GA), to_csr(GB)
             dep = couple(cfg.n_nodes, cfg.dependency_fraction, seed=s + 2)
             gid = f"{fam}_{g:03d}"
@@ -44,10 +46,10 @@ def build_networks_and_cascades(cfg: ExperimentConfig) -> list[ThresholdReport]:
                                    dependency_fraction=cfg.dependency_fraction, seed=s).model_dump())
             for p in cfg.attack_grid:
                 for r in range(cfg.n_seeds):
-                    o = simulate(A, B, dep, p, seed=s + 3 + r)
+                    o = simulate(A, B, dep, p, seed=s + 3 + r, order=order_A)
                     trajs.append(_traj_rows(gid, r, p, o, cfg.n_nodes))
                     outs.append({"graph_id": gid, "family": fam, "seed": r, "p": p, "S_final": o["S_final"],
-                                 "collapsed": o["S_final"] < cfg.collapse_threshold, "n_half": o["n_half"]})
+                                 "collapsed": o["S_final"] < cfg.collapse_threshold, "n_half": o["n_half"], "attack": cfg.attack})
     traj, outc = pd.concat(trajs, ignore_index=True), pd.DataFrame(outs)
     validate_trajectories(traj)
     validate_outcomes(outc)

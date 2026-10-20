@@ -31,7 +31,7 @@ def giant_mask(adj: csr_matrix, alive: np.ndarray) -> np.ndarray:
     return out
 
 
-def simulate(adj_A, adj_B, dep, p: float, seed: int = 0, max_iter: int = 10_000) -> dict:
+def simulate(adj_A, adj_B, dep, p: float, seed: int = 0, order=None, max_iter: int = 10_000) -> dict:
     """Run one cascade. Returns failure times and the per-iteration curve.
 
     fail_t_A[i] = HALF-STEP at which A-node i failed, -1 = survived.
@@ -46,7 +46,8 @@ def simulate(adj_A, adj_B, dep, p: float, seed: int = 0, max_iter: int = 10_000)
     fail_A = np.full(n, -1, np.int64)
     fail_B = np.full(n, -1, np.int64)
 
-    hit = rng.choice(n, int(round(p * n)), replace=False)
+    k = int(round(p * n))
+    hit = np.asarray(order)[:k] if order is not None else rng.choice(n, k, replace=False)
     alive_A[hit] = False
     fail_A[hit] = 0
     curve = [(0, alive_A.mean(), alive_B.mean())]

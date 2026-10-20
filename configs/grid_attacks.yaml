@@ -1,0 +1,17 @@
+# Attack comparison for the targeted-attack extension.
+# Fast sizes (N=800, 12 graphs/family) ~ a few minutes. Enough to show the finding clearly.
+- run_id: main_random
+  n_nodes: 800
+  n_graphs_per_family: 12
+  n_seeds: 3
+  seed: 42
+  collapse_threshold: 0.25
+  attack: random
+- run_id: main_degree
+  n_nodes: 800
+  n_graphs_per_family: 12
+  n_seeds: 3
+  seed: 42
+  collapse_threshold: 0.25
+  attack: degree
+  attack_grid: [0.0, 0.02, 0.04, 0.06, 0.08, 0.1, 0.12, 0.14, 0.16, 0.18, 0.2, 0.22, 0.24, 0.26, 0.28, 0.3]
