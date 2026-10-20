@@ -19,6 +19,7 @@ from person_b_ml.features import extract_features
 from person_b_ml.mechanism_classifier import run_mechanism
 from person_b_ml.collapse_predictor import (within_distribution, leave_one_family_out,
                                             fit_predict_all, eval_masks, score)
+from person_a_sim.threshold_analysis import sweep, estimate_pc
 
 N, NG, NS, SEED, THR = 800, 10, 3, 0, 0.25
 HZ = [4, 8]
@@ -116,5 +117,20 @@ for h in HZ:
 print("  -> KEY: behaviour (B) gap << count (A) gap, esp. targeted->random.")
 print("     Watching the cascade's behaviour survives a change in attack type; counting does not.")
 
+# ---- 7 partial coupling ----
+hdr("RESULT 7  -  [MY EXTENSION 2]  partial coupling: fewer interdependencies = tougher system")
+CGRID = [round(0.04 * i, 3) for i in range(20)]   # 0 .. 0.76
+CQS = [0.25, 0.5, 1.0]
+print("    numbers below = p_c (collapse point); q = fraction of nodes that are interdependent")
+print("    " + f"{'family':7s}" + "".join(f"{'q=' + str(q):>9s}" for q in CQS))
+for f in FAMS:
+    cells = []
+    for q in CQS:
+        pc = estimate_pc(sweep(f, 4, CGRID, n_seeds=2, n=N, k=4.0, q=q, threshold=THR, base_seed=0))["p_c"]
+        cells.append(f"{pc:.3f}" if pc == pc else "none")
+    print("    " + f"{f:7s}" + "".join(f"{c:>9s}" for c in cells))
+print("  -> p_c RISES as q falls: the less the two networks depend on each other, the more")
+print("     damage they survive (q=1.0 = fully interdependent = most fragile).")
+
 hdr("DEMO COMPLETE")
-print("  Baseline (1-4) = your friend's project. Extension (5-6) = your targeted-attack addition.")
+print("  Baseline (1-4) = your friend's project.  Extensions: (5-6) targeted attacks, (7) partial coupling = yours.")
